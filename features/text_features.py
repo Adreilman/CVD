@@ -18,11 +18,11 @@ class CodeTfidVectorizer(TfidfVectorizer):
             stop_words = stop_words
             )
 
-if __name__ == "__main__":
-    vec = CodeTfidVectorizer()
-    X = vec.fit_transform([
-        'os.system("ping " + host)',
-        'cursor.execute("SELECT * FROM users WHERE id = " + uid)',
-        'a = 1 + 2'
-    ])
-    print(vec.get_feature_names_out())
+# if __name__ == "__main__":
+#     vec = CodeTfidVectorizer()
+#     X = vec.fit_transform([
+#         'os.system("ping " + host)',
+#         'cursor.execute("SELECT * FROM users WHERE id = " + uid)',
+#         'a = 1 + 2'
+#     ])
+#     print(vec.get_feature_names_out())
