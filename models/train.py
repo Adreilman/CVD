@@ -16,7 +16,7 @@ from text_features import CodeTfidVectorizer
 df = pd.read_csv("data/processed/combined.csv")
 # print(f"Loaded {len(df)} rows")
 # print(df["label"].value_counts())
-
+df = df[df["label"] != "CWE-798_HardcodedCreds"]
 ast_df = pd.DataFrame(df["snippet"].apply(extract_features).tolist())
 print(ast_df.shape)
 

