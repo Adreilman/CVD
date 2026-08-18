@@ -65,13 +65,13 @@ print(extract_features(
     'cursor.execute(f"SELECT * FROM users WHERE id={uid}")'
 ))
 
-print(extract_features('pickle.loads(data)'))
-print(extract_features('pickle.dumps(data)'))
-print(extract_features('password = "SuperSecret123!"'))
-tree = ast.parse('password = "SuperSecret123!"')
-node = tree.body[0]
-print(type(node.targets))
-print(node.targets)
-print(extract_features('a = 1 + 2'))
-print(extract_features('api_key = os.environ.get("API_KEY")'))
-print(extract_features('api_key = "hardcoded_key_123"'))         
+# print(extract_features('pickle.loads(data)'))
+# print(extract_features('pickle.dumps(data)'))
+# print(extract_features('password = "SuperSecret123!"'))
+# tree = ast.parse('password = "SuperSecret123!"')
+# node = tree.body[0]
+# print(type(node.targets))
+# print(node.targets)
+# print(extract_features('a = 1 + 2'))
+# print(extract_features('api_key = os.environ.get("API_KEY")'))
+# print(extract_features('api_key = "hardcoded_key_123"'))         
