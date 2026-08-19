@@ -60,9 +60,9 @@ streamlit run app/streamlit_app.py
 ```
 
 ## Model Performance
-- Overall accuracy: 76%
-- Best class: CWE-89 SQLi (F1: 0.89)
-- Weakest class: CWE-79 XSS (F1: 0.53)
+- Overall accuracy: 80%
+- Best class: SAFE  (F1: 0.86)
+- Weakest class: CWE-78(F1: 0.56)
 
 ## Known Limitations
 - Short generic snippets can produce low-confidence uncertain predictions
