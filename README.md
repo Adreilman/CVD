@@ -1,5 +1,7 @@
 # PyVulnDetect
 
+
+🔴 **Live Demo:** [code-vuln-detector.streamlit.app](https://code-vuln-detector.streamlit.app)
 ML-based Python code vulnerability detector using AST structural features 
 and TF-IDF text features with a Random Forest classifier.
 
