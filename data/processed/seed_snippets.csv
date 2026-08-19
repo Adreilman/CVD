@@ -155,3 +155,18 @@ def connect():
     for _ in range(n):
         a, b = b, a + b
     return a",Safe,synthetic
+"def calculate_area(length, width):
+    return length * width",Safe,synthetic
+"def fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a",Safe,synthetic
+"def is_palindrome(s):
+    return s == s[::-1]",Safe,synthetic
+"def count_words(text):
+    return len(text.split())",Safe,synthetic
+"def celsius_to_fahrenheit(c):
+    return (c * 9/5) + 32",Safe,synthetic
+"def find_max(numbers):
+    return max(numbers)",Safe,synthetic

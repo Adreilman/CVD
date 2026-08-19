@@ -17,9 +17,6 @@ data/processed/combined.csv
 # EDA output plots (regenerate via notebooks/eda.py)
 notebooks/output/
 
-# Trained models (regenerate via models/train.py)
-models/*.pkl
-models/*.joblib
 
 # OS
 .DS_Store

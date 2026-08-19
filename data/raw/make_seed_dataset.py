@@ -332,6 +332,38 @@ def fibonacci(n):
         a, b = b, a + b
     return a
 """, "Safe")
+add("""
+def calculate_area(length, width):
+    return length * width
+""", "Safe")
+
+add("""
+def fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+""", "Safe")
+
+add("""
+def is_palindrome(s):
+    return s == s[::-1]
+""", "Safe")
+
+add("""
+def count_words(text):
+    return len(text.split())
+""", "Safe")
+
+add("""
+def celsius_to_fahrenheit(c):
+    return (c * 9/5) + 32
+""", "Safe")
+
+add("""
+def find_max(numbers):
+    return max(numbers)
+""", "Safe")
 
 os.makedirs("../processed", exist_ok=True)
 df = pd.DataFrame(samples)
