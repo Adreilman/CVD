@@ -1,71 +1,46 @@
-# pyvulndetect README
+# PyVulnDetect — VS Code Extension
 
-This is the README for your extension "pyvulndetect". After writing up a brief description, we recommend including the following sections.
+ML-powered Python vulnerability detector that scans your code directly in VS Code.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- **Inline diagnostics** — flags vulnerable code with yellow underlines, just like a linter
+- **Popup notification** — shows vulnerability type and confidence score instantly
+- **5 vulnerability classes detected:**
+  - CWE-89: SQL Injection
+  - CWE-502: Insecure Deserialization  
+  - CWE-79: XSS
+  - CWE-78: OS Command Injection
+  - Safe (no vulnerability detected)
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+The extension requires the PyVulnDetect API server running locally.
 
-## Extension Settings
+**1. Clone the main repo:**
+```bash
+git clone https://github.com/your-username/CVD.git
+cd CVD
+```
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+**2. Set up and run the API server:**
+```bash
+python -m venv venv
+source venv/Scripts/activate   # Windows Git Bash
+pip install -r requirements.txt
+pip install fastapi uvicorn
+uvicorn app.api:app --reload
+```
 
-For example:
+## Usage
 
-This extension contributes the following settings:
+1. Make sure the API server is running at `http://127.0.0.1:8000`
+2. Open any Python `.py` file in VS Code
+3. Press `Ctrl+Shift+P`
+4. Type `PyVulnDetect: Scan File` and hit Enter
+5. Results appear as:
+   - A popup notification in the bottom right
+   - Yellow underline on the file if a vulnerability is detected (≥75% confidence)
+   - Hover over the underline to see the vulnerability type
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+## How it works
